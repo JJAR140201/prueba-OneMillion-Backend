@@ -14,6 +14,7 @@ public static class InfraServiceCollectionExtensions
         services.AddSingleton(settings);
         services.AddSingleton<MongoContext>();
         services.AddScoped<IPropertyReadRepository, PropertyReadRepository>();
+        services.AddScoped<IPropertyWriteRepository, PropertyWriteRepository>();
         return services;
     }
 }

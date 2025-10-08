@@ -8,6 +8,7 @@ public static class ApiServiceCollectionExtensions
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services.AddScoped<IPropertyQueryService, PropertyQueryService>();
+        services.AddScoped<IPropertyCommandService, PropertyCommandService>();
         return services;
     }
 }

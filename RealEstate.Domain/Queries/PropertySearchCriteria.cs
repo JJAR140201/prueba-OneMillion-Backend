@@ -5,6 +5,13 @@ public sealed record PropertySearchCriteria(
     string? Address = null,
     decimal? MinPrice = null,
     decimal? MaxPrice = null,
+    string? IdOwner = null,
+    string? CodeInternal = null,
+    int? Year = null,
+    int? MinYear = null,
+    int? MaxYear = null,
+    string? SortBy = "Price",
+    string? SortOrder = "desc",
     int Page = 1,
     int PageSize = 20
 )
