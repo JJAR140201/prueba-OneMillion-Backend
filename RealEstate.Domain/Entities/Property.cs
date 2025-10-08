@@ -9,7 +9,7 @@ public sealed class Property
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; init; } = default!;
     
-    [BsonRepresentation(BsonType.ObjectId)]
+    // IdOwner como string normal, no como ObjectId
     public string IdOwner { get; init; } = default!;
     
     public string Name { get; init; } = default!;

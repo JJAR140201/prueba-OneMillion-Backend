@@ -12,12 +12,12 @@ public sealed class PropertyWriteRepository(MongoContext ctx) : IPropertyWriteRe
         return property;
     }
 
-    public async Task<Property?> UpdateAsync(string id, Property property, CancellationToken ct = default)
+    public async Task<bool> UpdateAsync(Property property, CancellationToken ct = default)
     {
-        var filter = Builders<Property>.Filter.Eq(x => x.Id, id);
+        var filter = Builders<Property>.Filter.Eq(x => x.Id, property.Id);
         var result = await ctx.Properties.ReplaceOneAsync(filter, property, cancellationToken: ct);
         
-        return result.MatchedCount > 0 ? property : null;
+        return result.MatchedCount > 0;
     }
 
     public async Task<bool> DeleteAsync(string id, CancellationToken ct = default)
@@ -40,5 +40,10 @@ public sealed class PropertyWriteRepository(MongoContext ctx) : IPropertyWriteRe
         var count = await ctx.Properties.CountDocumentsAsync(filter, cancellationToken: ct);
         
         return count > 0;
+    }
+
+    public async Task ClearAllAsync(CancellationToken ct = default)
+    {
+        await ctx.Properties.DeleteManyAsync(Builders<Property>.Filter.Empty, ct);
     }
 }

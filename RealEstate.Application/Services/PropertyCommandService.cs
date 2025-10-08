@@ -10,6 +10,7 @@ public interface IPropertyCommandService
     Task<PropertyDto?> UpdateAsync(string id, UpdatePropertyDto dto, CancellationToken ct = default);
     Task<bool> DeleteAsync(string id, CancellationToken ct = default);
     Task<PropertyDto?> GetByIdAsync(string id, CancellationToken ct = default);
+    Task ClearAllAsync(CancellationToken ct = default);
 }
 
 public sealed class PropertyCommandService(
@@ -24,13 +25,12 @@ public sealed class PropertyCommandService(
 
     public async Task<PropertyDto?> UpdateAsync(string id, UpdatePropertyDto dto, CancellationToken ct = default)
     {
-        var exists = await writeRepo.ExistsAsync(id, ct);
-        if (!exists)
-            return null;
+        var existing = await writeRepo.GetByIdAsync(id, ct);
+        if (existing is null) return null;
 
-        var entity = dto.ToEntity(id);
-        var updated = await writeRepo.UpdateAsync(id, entity, ct);
-        return updated?.ToDto();
+        var updated = dto.ToEntity(id);
+        var result = await writeRepo.UpdateAsync(updated, ct);
+        return result ? PropertyMapping.ToDto(updated) : null;
     }
 
     public async Task<bool> DeleteAsync(string id, CancellationToken ct = default)
@@ -42,5 +42,10 @@ public sealed class PropertyCommandService(
     {
         var entity = await writeRepo.GetByIdAsync(id, ct);
         return entity?.ToDto();
+    }
+
+    public async Task ClearAllAsync(CancellationToken ct = default)
+    {
+        await writeRepo.ClearAllAsync(ct);
     }
 }

@@ -118,6 +118,17 @@ public sealed class PropertiesController(
         var (items, total) = await queryService.SearchAsync(query, ct);
         return Ok(new PagedResult<PropertyDto>(items, total, page, pageSize));
     }
+
+    /// <summary>
+    /// [TEMPORAL] Limpia toda la colección de propiedades 
+    /// </summary>
+    [HttpDelete("dev/clear-all")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ClearAllProperties(CancellationToken ct = default)
+    {
+        await commandService.ClearAllAsync(ct);
+        return Ok(new { Message = "Todas las propiedades han sido eliminadas" });
+    }
 }
 
 /// <summary>Envelope simple de paginación</summary>
